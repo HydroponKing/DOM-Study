@@ -6,8 +6,6 @@ function addComment() {
     let userName = document.getElementById('nameInput').value.trim();
     let userComment = document.getElementById('commentInput').value.trim();
 
-    let TrimuserName = nameInput.value.trim();
-    let TrimuserComment = commentInput.value.trim();
 
     if (userName.length > 0 && userComment.length > 0) {
         let newComment = document.createElement('li');
@@ -33,6 +31,8 @@ function addComment() {
 
         // Инициализация кнопок лайков только для нового комментария
         initializeLikeButton(newComment);
+        document.getElementById('nameInput').style = "";
+        document.getElementById('commentInput').style = "";
     } else {
                // krasim pustoi input
                if (userName.length === 0) {
@@ -40,7 +40,7 @@ function addComment() {
             } else {
                 nameInput.style.border = "";
             }
-            if (TrimuserComment.length === 0) {
+            if (userComment.length === 0) {
                 commentInput.style.border = "2px solid red";
             } else {
                 commentInput.style.border = "";
@@ -57,9 +57,12 @@ function addComment() {
         let minutes = currentDate.getMinutes();
 
         return `${day}.${month}.${year} ${hours}:${minutes}`;
+
     }
+
     document.getElementById('nameInput').value = "";
     document.getElementById('commentInput').value = "";
+
 
 }
 
