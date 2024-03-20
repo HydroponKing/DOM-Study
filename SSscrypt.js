@@ -1,12 +1,13 @@
+//функция для генирации рандомного айдишника для каждого нового комментария
 function generateUniqueId() {
     return Date.now() + Math.random().toString(36).substr(2, 9);
 }
  
 
 function addComment() {
+    
     let userName = document.getElementById('nameInput').value.trim();
     let userComment = document.getElementById('commentInput').value.trim();
-
 
     if (userName.length > 0 && userComment.length > 0) {
         let newComment = document.createElement('li');
@@ -30,7 +31,7 @@ function addComment() {
         let commentsList = document.querySelector(".comments");
         commentsList.appendChild(newComment);
 
-        // Инициализация кнопок лайков только для нового комментария
+    
         initializeLikeButton(newComment);
         document.getElementById('nameInput').style = "";
         document.getElementById('commentInput').style = "";
@@ -72,8 +73,7 @@ function initializeLikeButton(comment) {
     const likeCount = comment.querySelector('.likes-counter');
 
     likeButton.addEventListener('click', () => {
-        const likeId = likeButton.getAttribute('data-likeid');
-
+        
         if (!likeButton.classList.contains('-active-like')) {
             likeButton.classList.add('-active-like');
             likeCount.textContent = parseInt(likeCount.textContent) + 1;
