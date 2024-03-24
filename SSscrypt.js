@@ -1,94 +1,107 @@
-let commentsArray = []; //пустой массив, в дальнейшем будем хранить там объект комментария
+let comments = [
+  {
+    name: "Глеб Фокин",
+    date: new Date(2022, 1, 12, 12, 18),
+    text: "Это будет первый комментарий на этой странице",
+    likes: 3,
+    isLiked: false
+  },
+  {
+    name: "Варвара Н.",
+    date: new Date(2022, 1, 13, 19, 22),
+    text: "Мне нравится как оформлена эта страница! ❤",
+    likes: 75,
+    isLiked: true
+  }
+];
 
-function addComment() { //фун. для добавления комментария
-    let name = document.getElementById('nameInput').value.trim(); //поучаем значения с полей ввода и удаляем лищние пробелы ыы ы
-    let commentText = document.getElementById('commentInput').value.trim();
-    let currentDate = new Date(); //получаем дату и время
-    let dateString = currentDate.toLocaleString(); //форматируем датувремя в строчку
-  
-    if (name === '' && commentText === '') { //проверяем наличие контента в полях ввода
-      document.getElementById('nameInput').classList.add('empty-input');
-      document.getElementById('commentInput').classList.add('empty-input');
-      return; // прерываем выполнение если оба пустые
-    }
-  
-    // тут мы проверяем есть ли контнет в поле имени
-    if (name === '') {
-      document.getElementById('nameInput').classList.add('empty-input');
-      return; 
-    }
-  
-    // тут мы проверяем есть ли контнет в поле коммента
-    if (commentText === '') {
-      document.getElementById('commentInput').classList.add('empty-input');
-      return; 
-    }
-  
-    // если оба поля заполнены - тада удаляем класс empty-input у обоих полей
-    document.getElementById('nameInput').classList.remove('empty-input');
-    document.getElementById('commentInput').classList.remove('empty-input');
-  
-    let comment = { // создаем объект коммента
+
+const renderComments = () => {
+  const likeButtonClass = "like-button";
+  document.querySelector(".comments").innerHTML = comments
+    .map((comment, index) => {
+      return `
+      <li class="comment" data-index="${index}">
+        <div class="comment-header">
+          <div>${comment.name}</div>
+          <div>${comment.date.toLocaleDateString()} ${comment.date.toLocaleTimeString()}</div>
+        </div>
+         <!--  <div class="comment-body">
+               ${comment.text}                почему-то два раза коммент пишется с этой частью функции -->
+          <div class="comment-text">
+            ${comment.text}
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">${comment.likes}</span> <!--лайка-->
+            <button data-index="${index}" class="${likeButtonClass} ${comment.isLiked ? "-active-like" : ""}"></button>
+          </div>
+        </div>
+      </li>
+    `;
+    })
+    .join("");
+};
+
+document.querySelector(".add-form-button").addEventListener("click", () => {
+  const nameInput = document.querySelector(".add-form-name");
+  const textArea = document.querySelector(".add-form-text");
+
+  const name = nameInput.value.trim();
+  const text = textArea.value.trim();
+
+  if (!name) {
+    nameInput.classList.add("empty-input");
+  } else {
+    nameInput.classList.remove("empty-input");
+  }
+
+  if (!text) {
+    textArea.classList.add("empty-input");
+  } else {
+    textArea.classList.remove("empty-input");
+  }
+
+  if (name && text) {
+    comments.push({
       name: name,
-      text: commentText,
-      date: dateString,
-      likes: 0
-    };
-  
-    commentsArray.push(comment); //добавляем объект коммента в созданный ранее массив 
-  
-    document.getElementById('nameInput').value = ''; //чистим поля ввода
-    document.getElementById('commentInput').value = '';
-  
-    displayComment(comment); //вызов функции которая описана ниже ⬇⬇
+      date: new Date(),
+      text: text,
+      likes: 0,
+      isLiked: false
+    });
+
+    nameInput.value = "";
+    textArea.value = "";
+
+    renderComments();
+  } else {
+    nameInput.classList.add("empty-input");
+    textArea.classList.add("empty-input");
   }
+});
 
-function displayComment(comment) {// функция для отображения нового коммента на странице html 
-  let li = document.createElement('li'); //создаем новый элемент страницы
-  li.classList.add('comment'); //добавляем к нему класс
+document.addEventListener("click", (event) => {
+  const likeButtonClass = "like-button";
+  if (event.target.classList.contains(likeButtonClass)) {
+    const index = event.target.dataset.index;
+    const comment = comments[index];
 
-  let header = document.createElement('div');
-  header.classList.add('comment-header');
-  header.innerHTML = '<div>' + comment.name + '</div>' + '<div>' + comment.date + '</div>'; // заполняем разметку html 
-
-  let body = document.createElement('div');
-  body.classList.add('comment-body');
-  body.innerHTML = '<div class="comment-text">' + comment.text + '</div>';
-
-  let footer = document.createElement('div');
-  footer.classList.add('comment-footer');
-
-  let likesDiv = document.createElement('div');
-  likesDiv.classList.add('likes');
-  likesDiv.innerHTML = '<span class="likes-counter" data-likeid="' + commentsArray.length + '">0</span>' + '<button class="like-button" data-likeid="' + commentsArray.length + '" onclick="likeComment(this)"></button>';
-
-  footer.appendChild(likesDiv); // доб-ем likesDiv в подвал коммента
-
-  li.appendChild(header); // доб-ем заголовок, тело и подвал комментария в элемент списка
-  li.appendChild(body);
-  li.appendChild(footer);
-
-  document.querySelector('.comments').appendChild(li); //доб комментарий
-}
-
-function likeComment(button) { //функция для обработки действий после нажатии кнопки лайк
-    let commentId = button.getAttribute('data-likeid'); //получаем айди коммента
-    let index = parseInt(commentId); // преобразуем индификатор в число
-    let likesCounter = document.querySelector('.likes-counter[data-likeid="' + commentId + '"]'); // находим счет лайков
-    if (likesCounter !== null) { //проверяем есть ли счет. лайков если нет - выводим в консоль сообщ об ошиб
-      let likes = parseInt(likesCounter.textContent);
-      if (button.classList.contains('-active-like')) { // проверяем был ли уже поставлен лайк
-        likesCounter.textContent = likes - 1; // уменьшаем лайк на 1
-        button.classList.remove('-active-like'); // убираем класс 
-        commentsArray[index].likes = likes - 1; // 0฿новля₤м кол-во лайков
-      } else {
-        likesCounter.textContent = likes + 1; 
-        button.classList.add('-active-like'); 
-        commentsArray[index].likes = likes + 1; 
-      }
-    } 
-    else {
-      console.error('Element with class "likes-counter" and data-likeid="' + commentId + '" was not found.');
+    if (!comment.isLiked) {
+      comment.likes++;
+      comment.isLiked = true;
+      event.target.classList.add("-active-like");
+    } else {
+      comment.likes--;
+      comment.isLiked = false;
+      event.target.classList.remove("-active-like");
     }
+
+    const counter = event.target.parentElement.querySelector(".likes-counter");
+    counter.textContent = comment.likes; 
   }
-  
+});
+
+
+renderComments();
