@@ -76,9 +76,6 @@ document.querySelector(".add-form-button").addEventListener("click", () => {
     textArea.value = "";
 
     renderComments();
-  } else {
-    nameInput.classList.add("empty-input");
-    textArea.classList.add("empty-input");
   }
 });
 
