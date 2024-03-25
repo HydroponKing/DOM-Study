@@ -104,31 +104,4 @@ document.addEventListener("click", (event) => {
   }
 });
 
-let commentClicked = false;                                 // переменная с булевым значением для нажатия только одного раза по комментарию 
-
-function stripScripts(input) {                              //функция безопасности 
-  const div = document.createElement("div");
-  div.innerHTML = input;
-  const scripts = div.getElementsByTagName("script");
-  let i = scripts.length;
-  while (i--) {
-      scripts[i].parentNode.removeChild(scripts[i]);
-  }
-  return div.textContent || div.innerText || "";
-}
-
-document.addEventListener("click", (event) => {
-  const commentClass = "comment";
-  if (event.target.classList.contains(commentClass) && !event.target.classList.contains("comment-text")) {
-    const index = event.target.dataset.index;
-    const selectedComment = comments[index];
-    const addFormText = document.querySelector(".add-form-text");
-    const newComment = `${selectedComment.name}: ${selectedComment.text}`; 
-
-    addFormText.value = newComment; 
-    addFormText.focus();
-  }
-});
-
-
 renderComments();
