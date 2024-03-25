@@ -1,4 +1,3 @@
-
 let comments = [
   {
     name: "Глеб Фокин",
@@ -77,10 +76,7 @@ document.querySelector(".add-form-button").addEventListener("click", () => {
     textArea.value = "";
 
     renderComments();
-  } else {
-    nameInput.classList.add("empty-input");
-    textArea.classList.add("empty-input");
-  }
+  } 
 });
 
 document.addEventListener("click", (event) => {
@@ -103,8 +99,6 @@ document.addEventListener("click", (event) => {
     counter.textContent = comment.likes;
   }
 });
-
-let commentClicked = false;                                 // переменная с булевым значением для нажатия только одного раза по комментарию 
 
 function stripScripts(input) {                              //функция безопасности 
   const div = document.createElement("div");
