@@ -48,8 +48,8 @@ document.querySelector(".add-form-button").addEventListener("click", () => {
   const nameInput = document.querySelector(".add-form-name");
   const textArea = document.querySelector(".add-form-text");
 
-  const name = nameInput.value.trim();
-  const text = textArea.value.trim();
+  const name = DOMPurify.sanitize(nameInput.value.trim());
+  const text = DOMPurify.sanitize(textArea.value.trim());
 
   if (!name) {
     nameInput.classList.add("empty-input");
@@ -65,9 +65,9 @@ document.querySelector(".add-form-button").addEventListener("click", () => {
 
   if (name && text) {
     comments.push({
-      name: nameInput.value.replaceAll('<', '&#60;').replaceAll('>', '&#62'),
+      name: name,
       date: new Date(),
-      text: textArea.value.replaceAll('<', '&#60;').replaceAll('>', '&#62'),
+      text: text,
       likes: 0,
       isLiked: false
     });
