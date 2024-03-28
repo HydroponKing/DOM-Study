@@ -65,9 +65,9 @@ document.querySelector(".add-form-button").addEventListener("click", () => {
 
   if (name && text) {
     comments.push({
-      name: name,
+      name: nameInput.value.replaceAll('<', '&#60;').replaceAll('>', '&#62'),
       date: new Date(),
-      text: text,
+      text: textArea.value.replaceAll('<', '&#60;').replaceAll('>', '&#62'),
       likes: 0,
       isLiked: false
     });
@@ -100,16 +100,7 @@ document.addEventListener("click", (event) => {
   }
 });
 
-function stripScripts(input) {                              //функция безопасности 
-  const div = document.createElement("div");
-  div.innerHTML = input;
-  const scripts = div.getElementsByTagName("script");
-  let i = scripts.length;
-  while (i--) {
-      scripts[i].parentNode.removeChild(scripts[i]);
-  }
-  return div.textContent || div.innerText || "";
-}
+
 
 document.addEventListener("click", (event) => {
   const commentClass = "comment";
